@@ -1,0 +1,26 @@
+Intro to R
+================
+
+**By [Tim Henderson](https://twitter.com/TimHendersonSL) (tim dot hendo at gmail dot com)**
+*Storytelling with Data Workshop at Boston University (June 12, 2017)* <br><br>
+
+\*GitHub repository for Data+Code: <https://github.com/timhendo/R-data-cleaning-tricks*>
+
+R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
+When the Associated Press recently added new data journalism items to its stylebook, it [specified] (http://www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
+
+“If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
+One journalism professor I know saw this and reacted this way: "I think this is a knife in the back of old school tinkering in Excel for a while until we get some numbers that look good. How do you replicate noodling around in a spreadsheet for a few hours? You can't. So we're going to have to get better about using methods that can be replicated. "
+One of the nice things about R is that it shows every step you take from raw data to finished product -- much the way SAS or in some cases SPSS did, for those familiar with those statistics programs.
+
+Now, this is not written in stone. Many times you can replicate what was done in Excel with careful recordkeeping, and sometimes factcheckers will want to replicate your work even in getting the raw data together -- did you miss anything or fail to get part of the data? It happens! And even without R you would hope somebody could recreate your conclusions knowing nothing but your data source. 
+But there's not doubt that there's great peace of mind in code that starts with raw data. I have an ex-colleague, now at the Washington Post, who says "Everytime I decide to just do something real quick in Excel, I always regret it." 
+And I know what he means. Often a data request will seem to be a quick table, and you can bypass the steps of importing data, writing queries in SAS or SQL and just paste some numbers into a sheet and work with them a little and hand them over. But so many times you'll get follow-up requests -- "Geen, it would be nice to see this by year going back a ways, or could you just throw in a couple more stats..." 
+And as a practical matter this could mean starting over, whereas if you've really datafied it by importing data, it's easy to expand or modify  what you've done, and there's less last-minute worry about mistakes.
+I have a friend at Reuters who recommends writing down every sentence in a story based on data, then trying to recreate it again from scratch before publication without any reuse of code. 
+
+So replication is not innoculation against mistakes, but it is a paper trail you can follow to isolate mistakes when they appear and fix thenm without starting over. And that's the real peace of mind.
+
+Also, 
+
+
