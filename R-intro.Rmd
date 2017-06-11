@@ -7,7 +7,7 @@ Intro to R
 \*GitHub repository for Data+Code: <https://github.com/timhendo/R-data-cleaning-tricks*>
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
-When the Associated Press recently added new data journalism items to its stylebook, it [specified] (http://www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
+When the Associated Press recently added new data journalism items to its stylebook, it [specified] (www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
 
 “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
 One journalism professor I know saw this and reacted this way: "I think this is a knife in the back of old school tinkering in Excel for a while until we get some numbers that look good. How do you replicate noodling around in a spreadsheet for a few hours? You can't. So we're going to have to get better about using methods that can be replicated. "
@@ -19,8 +19,11 @@ And I know what he means. Often a data request will seem to be a quick table, an
 And as a practical matter this could mean starting over, whereas if you've really datafied it by importing data, it's easy to expand or modify  what you've done, and there's less last-minute worry about mistakes.
 I have a friend at Reuters who recommends writing down every sentence in a story based on data, then trying to recreate it again from scratch before publication without any reuse of code. 
 
-So replication is not innoculation against mistakes, but it is a paper trail you can follow to isolate mistakes when they appear and fix thenm without starting over. And that's the real peace of mind.
+So replication is not innoculation against mistakes, but it is a paper trail you can follow to isolate mistakes when they appear and fix thenm without starting over. And that's the real peace of mind. And there's nothing to say you can't use Excel, SQL, Perl or anything else you want to prepare your data for analysis in R. 
 
-Also, 
-
+Also, with R you can benefit from others' analyses and follow along with the increasoing number of data journalism outlets that publish in R alongside their reports. 
+For instance BuzzFeed and FiveThirtyEight keep a lot of their analyses online for anyone to replicate in R. 
+* [FiveThirtyEight](https://github.com/fivethirtyeight/data)
+* [BuzzFeed](
+There are reasons why [R is hard to learn] (http://r4stats.com/articles/why-r-is-hard-to-learn/) -- it doesn't follow the mold of other data analysis or statistics programs and has its own syntax and keywords that often don't match what you'd expect, like "sort" -- 
 
