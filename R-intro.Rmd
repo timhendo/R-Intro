@@ -26,7 +26,7 @@ For instance BuzzFeed and FiveThirtyEight keep a lot of their analyses online fo
 * [FiveThirtyEight](https://github.com/fivethirtyeight/data)
 * [BuzzFeed](https://github.com/BuzzFeedNews/everything)
 
-**Getting Set up
+#Getting Set up
 
 There are reasons why [R is hard to learn](http://r4stats.com/articles/why-r-is-hard-to-learn/) -- it doesn't follow the mold of other data analysis or statistics programs and has its own syntax and keywords that often don't match what you'd expect, like "sort" -- 
 
