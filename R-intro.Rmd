@@ -6,6 +6,8 @@ Intro to R
 
 \*GitHub repository for Data+Code: <https://github.com/timhendo/R-intro>
 
+Based on a tip sheet from Peter Aldhous, NICAR 2017, National Institute for Computer Assisted Reporting, with modifications
+
 # Getting Set Up
 Click on the link for the data and code in Github and download the zip file to your hard drive, then decompress to any directory you'll remember - c:/ is fine -- it would appear as c:/R-intro 
 
@@ -80,6 +82,8 @@ nations2 <- read_csv("nations2.csv")
 
 Notice that the Environment now contains two objects, of the type tbl_df, a variety of the standard R object for holding tables of data, known as a data frame:
 
+# Explore the data
+
 The str function will tell you more about the columns in your data, including their data. 
 ```{r}
 # view some of data
@@ -115,6 +119,104 @@ Now check again and note that population has changed to an integer type
 ```{r}
 head(nations1)
 ```
+Exercise: Try doing the same thing with the year column: look at it specifically, change it to an integer data type, then look at the nations1 data set again to make sure the change was made.
+
+# Summarize the data
+
+The summary function will run a quick statistical summary of a data frame, calculating mean, median and quartile values for continuous variables:
+```{r}
+# summary of nations1 data
+summary(nations1)
+```
+Uh-oh! What's the income variable that's a character field? Sounds like it should be numeric! Let's check -- what should we do to look at that column specifically? 
+
+# Manipulate and analyze data with dplyr
+
+Now we will use dplyr to manipulate the data, using the following basic operations. If you’ve worked with SQL before, these operations will be very familiar and this is another reason Hadley Wickam is a genius and has turned R into something we all need:
+
+* Sort: Largest to smallest, oldest to newest, alphabetical etc.
+
+* Filter: Select a defined subset of the data.
+
+* Summarize/Aggregate: Deriving one value from a series of other values to produce a summary statistic. Examples include: count, sum, mean, median, maximum, minimum etc. Often you’ll group data into categories first, and then aggregate by group.
+
+* Join: Merging entries from two or more datasets based on common field(s), e.g. unique ID number, last name and first name.
+ 
+For those with SQL backgrounds such as Microsoft Access or MySQL, this introduces some familiar concepts that will make R more hospitable. Here are some of the most useful functions in dplyr:
+
+* select -- Choose which columns to include.
+* filter -- Filter the data.
+* arrange --Sort the data, by size for continuous variables, by date, or alphabetically.
+* group_by-- Group the data by a categorical variable.
+* summarize -- Summarize, or aggregate (for each group if following group_by). Often used in conjunction with functions including:
+* mean(x) -- Calculate the mean, or average, for variable x.
+* median(x) -- Calculate the median.
+* max(x) -- Find the maximum value.
+* min(x) -- Find the minimum value.
+* sum(x) -- Add all the values together.
+* n() -- Count the number of records. Here there isn’t a variable in the brackets of the function, because the number of records applies to all variables.
+* n_distinct(x)--  Count the number of unique values in variable x.
+* mutate -- Create new column(s) in the data, or change existing column(s).
+* rename -- Rename column(s).
+
+These functions can be chained together using the “pipe” operator %>%, which makes the output of one line of code the input for the next. This allows you to run through a series of operations in a logical order. I find it helpful to think of %>% as meaning “then.”
+
+# Filter and sort data
+
+Now we will filter and sort the data in specific ways. We create new objects -- the way nations1 is an object or data frame -- to hold our results. First, we'll filster 
+
+First we'll Filter the data for 2014 only and for nations that have life expectancy data only.
+
+```{r}
+# filter data for 2014 only
+longevity <- nations1 %>%
+  filter(year == 2014 & !is.na(life_expect)) %>%
+  select(country, life_expect, income, region)
+  #check the result
+  head(longevity)
+  ```
+  In this code, we create a new object called longevity from nations1 and then (%>%) filter it for just the data for 2015 and to include only non-null values. Then we select just four variables from the ten in the original data frame. There should be data returned for 195 countries.
+
+
+Exercise: Wait, didn't we see 2015 as a year? Why are we using older data here? Try doing this for 2015 and see what happens.
+
+Now, let find the top 10 high-income countries with the lowest life expectancy in 2014 
+
+```{r}
+
+# find the ten high-income countries with the lowest life expectancy
+high_income_short_life <- longevity %>%
+  filter(income == "High income") %>%
+  arrange(life_expect) %>%
+  head(10)
+#Now look at what we have
+head(high_income_short_life,10)
+```
+
+Next, Find the 20 countries with the longest life expectancy in 2014, plus the United States with its rank, if it lies outside the top 20
+```{r)
+# find the 20 countries with the longest life expectancies, 
+# plus the United States with its rank, if it lies outside the top 20
+long_life <- longevity %>%
+  arrange(desc(life_expect)) %>%
+  mutate(rank = c(1:195)) %>%
+  filter(rank <= 20 | country == "United States")
+  #take a look
+  head(long_life,21)
+```
+Did that work? It did, but an RStudio element called tibbles prevents us from seeing all 21 rows, so we have to fall back on the print() function 
+```[r}
+#Tibble won't let us see that many rows so we fall back on print()
+print(tbl_df(long_life), n=21)
+```
+
+Hopefully the logic and flexibility of dplyr code is now becoming clear. Here we start by sorting the longevity data frame in descending order of life expantancy, then we create a new variable in the data called rank, using the mutate function. By feeding this a list of numbers from 1 to 195, we rank the countries according to their life expectancy. Finally we filter the data for the top 20 countries, plus the United States.
+
+Whereas in the initial filter of the data to create longevity data frame we used & to return data meeting both criteria, this time we used | to include data meeting either criteria. & and | are equivalent to AND and OR in SQL. When combining & and | in more complex filters, use parentheses to determine which parts of the evaluation should be carried out first.
+  
+
+
+
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
 When the Associated Press recently added new data journalism items to its stylebook, it [specified](www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
