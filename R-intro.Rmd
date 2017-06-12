@@ -14,16 +14,15 @@ Click on the link for the data and code in Github and download the zip file to y
 
 You already have an interactive environment where you can run commands from the script in the console below and see the results. To see this, type this in the script file
 
-{r}
+...{r}
 1+1
-'
+...
 Then, leaving the cursor on that line, click the Run button at the right top of the script file. Below, in the console, you'll see the answer
 
-{r}
+...{r}
 > 1+1
 [1] 2
-'
-
+...
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
 When the Associated Press recently added new data journalism items to its stylebook, it [specified](www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
