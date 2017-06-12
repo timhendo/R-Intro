@@ -33,7 +33,6 @@ So use File...Open to open the R-intro.R file in the directory we just downloade
 And be sure to set the working directory so we can see our data. Go to Session...Set Working Directory...To Source File Location. (You could also Choose Directory if you hadn't already loaded a script from that directory)
 
 # Save your data
-
 The panel at top right has two tabs, the first showing the Environment, or all of the “objects” loaded into memory for this R session. We can save this as well, so we don’t have to load and process data again if we return to return to a project later.
 
 Click on the save/disk icon in the Environment panel to save and call the file R-intro.RData.
@@ -213,7 +212,64 @@ print(tbl_df(long_life), n=21)
 Hopefully the logic and flexibility of dplyr code is now becoming clear. Here we start by sorting the longevity data frame in descending order of life expantancy, then we create a new variable in the data called rank, using the mutate function. By feeding this a list of numbers from 1 to 195, we rank the countries according to their life expectancy. Finally we filter the data for the top 20 countries, plus the United States.
 
 Whereas in the initial filter of the data to create longevity data frame we used & to return data meeting both criteria, this time we used | to include data meeting either criteria. & and | are equivalent to AND and OR in SQL. When combining & and | in more complex filters, use parentheses to determine which parts of the evaluation should be carried out first.
-  
+
+Now let’s find out where Russia ranks, too
+```{r}
+# find the 20 countries with the longest life expectancies,
+# plus the United States and Russia with their ranks
+long_life <- longevity %>%
+  arrange(desc(life_expect)) %>%
+  mutate(rank = c(1:195)) %>%
+  filter(rank <= 20 | grepl("United States|Russia", country))
+  #Again use print to see all the rows
+print(tbl_df(long_life), n=22)
+  ```
+This extremely geeky examples uses a UNIX style function for simple pattern matching on text, using the function grepl("pattern_a|pattern_b", x), which searches variable x for values containing any of a list of text values. This is useful for fuzzy text matching. Notice how searching for Russia returns Russian Federation, which is the country’s full name. 
+
+
+# Write data to a CSV file (comma separated values)
+
+Some of you who have been waiting the whole class to hear this -- just as readr can read in data from CSV (comma separated values) files, so it can write data back out to CSV and other text files so you can continued your analysis or visualization in other programs. This code will save the result above to a CSV file in your working directory:
+```{r}
+# write data to a csv file
+write_csv(long_life, "long_life.csv", na="")
+```
+
+Although we have no null values here, including na="" is good practice, because it ensures that any empty cells in the data frame are saved as blanks, not NA.
+
+# Group and summarize data
+```[r}
+# summarize the data by year, finding the maximum and minimum country-level life expectancies, and then calculate the range of values
+longevity_summary <- nations1 %>%
+  filter(!is.na(life_expect)) %>%
+  group_by(year) %>%
+  summarize(countries = n(),
+            max_life_expect = max(life_expect),
+            min_life_expect = min(life_expect)) %>%
+  mutate(range_life_expect = max_life_expect - min_life_expect) %>%
+  arrange(desc(year))
+  #look at data
+print(tbl_df(longevity_summary), n=25)
+
+```
+Notice that 
+* 'mutate' is how we calculate a column based on other columns here
+* summarize is how we operate on grouped values 
+* arrange is how we sort and descending has to be specified with desc() -- by default it's ascending order (smallest to largest)
+
+# Join data from two data frames
+
+There are also a number of join functions in dplyr to combine data from two data frames. Here are the most useful:
+
+* inner_join() returns values from both tables only where there is a match.
+* left_join() returns all the values from the first-mentioned table, plus those from the second table that match.
+* semi_join() filters the first-mentioned table to include only values that have matches in the second table.
+* anti_join() filters the first-mentioned table to include only values that have no matches in the second table.
+
+ [Here is a useful reference](http://stat545.com/bit001_dplyr-cheatsheet.html) for managing joins with dplyr.
+
+ 
+
 
 
 
