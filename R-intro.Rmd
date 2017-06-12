@@ -433,6 +433,38 @@ ggplot(immun_year, aes(x = start_year, y = pc_incomplete)) +
 ```
 
 
+# Dot-and-line chart by year, top 5 counties
+```{r}
+# dot and line chart by year, top5 counties
+ggplot(immun_top5_year, aes(x = start_year, y = pc_incomplete, color = county)) + 
+  geom_line(size = 1) +
+  geom_point(size = 3) +
+  xlab("") +
+  ylab("Percent incomplete") +
+  ggtitle("Immunization in California kindergartens\n(five largest counties)") +
+  theme_minimal(base_size = 12)
+```
+Notice that this chart has two data layers, geom_point() and geom_line. Notice also how \n can be used in text, here in the chart title, to insert a line break.
+
+# Heat map by year, all counties
+
+```{r}
+# heat map, all counties, by year
+ggplot(immun_counties_year, aes(x = start_year, y = county)) +
+  geom_tile(aes(fill = pc_incomplete), colour = "white") +
+  scale_fill_gradient(low = "white",
+                      high = "red", 
+                      name="",
+                      limits = c(0,35)) +
+  xlab("") +
+  ylab("County") +
+  ggtitle("Immunization in California kindergartens, by county") +
+  theme_minimal(base_size = 10) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position="bottom",
+        legend.key.height = unit(0.4, "cm"))
+```
 
 
 
@@ -443,8 +475,6 @@ When the Associated Press recently added new data journalism items to its styleb
 One journalism professor I know saw this and reacted this way: "I think this is a knife in the back of old school tinkering in Excel for a while until we get some numbers that look good. How do you replicate noodling around in a spreadsheet for a few hours? You can't. So we're going to have to get better about using methods that can be replicated. "
 One of the nice things about R is that it shows every step you take from raw data to finished product -- much the way SAS or in some cases SPSS did, for those familiar with those statistics programs. And it's FREE while SAS and SPSS have become insupportably expensive for most of those outside academia. 
 
-
-Go to 
 
 Now, this is not written in stone. Many times you can replicate what was done in Excel with careful recordkeeping, and sometimes factcheckers will want to replicate your work even in getting the raw data together -- did you miss anything or fail to get part of the data? It happens! And even without R you would hope somebody could recreate your conclusions knowing nothing but your data source. 
 But there's not doubt that there's great peace of mind in code that starts with raw data. I have an ex-colleague, now at the Washington Post, who says "Everytime I decide to just do something real quick in Excel, I always regret it." 
@@ -459,7 +489,5 @@ For instance BuzzFeed and FiveThirtyEight keep a lot of their analyses online fo
 * [FiveThirtyEight](https://github.com/fivethirtyeight/data)
 * [BuzzFeed](https://github.com/BuzzFeedNews/everything)
 
-# Getting Set up
-
-There are reasons why [R is hard to learn](http://r4stats.com/articles/why-r-is-hard-to-learn/) -- it doesn't follow the mold of other data analysis or statistics programs and has its own syntax and keywords that often don't match what you'd expect, like "sort" -- 
+Learning curve? There are reasons why [R is hard to learn](http://r4stats.com/articles/why-r-is-hard-to-learn/) -- it doesn't follow the mold of other data analysis or statistics programs and has its own syntax and keywords that often don't match what you'd expect, like "sort" -- often helpful to look for R training aimed at people with your own background 
 
