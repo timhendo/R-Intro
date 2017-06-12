@@ -12,16 +12,58 @@ Click on the link for the data and code in Github and download the zip file to y
 * Open RStudio. You should see three panes. 
 * Go to File...New File and pick R Script. 
 
-You already have an interactive environment where you can run commands from the script in the console below and see the results. To see this, type this in the script file
+You already have an interactive environment where you can run commands from the script in the console below and see the results. To see this, type an equation at the prompt, then hit the RUN button at the top right. 
 
 ...{r}
 1+1
 ...
-Then, leaving the cursor on that line, click the Run button at the right top of the script file. Below, in the console, you'll see the answer
+
+You can also type 
+x=1
+and Run, then 
+x
+To see how it evaluates. 
+
+The point of having a script separate from the console is that you can keep a record of what you did -- make the whole process easy to reproduce for somebody else. That's a big reason you'll want to learn and use R. 
+
+So use File...Open to open the R-intro.R file in the directory we just downloaded. Now you can follow along with the data there.
+
+And be sure to set the working directory so we can see our data. Go to Session...Set Working Directory...To Source File Location. (You could also Choose Directory if you hadn't already loaded a script from that directory)
+
+# Save your data
+
+The panel at top right has two tabs, the first showing the Environment, or all of the “objects” loaded into memory for this R session. We can save this as well, so we don’t have to load and process data again if we return to return to a project later.
+
+Click on the save/disk icon in the Environment panel to save and call the file R-intro.RData.
+
+# Comment your code
+
+Anything that appears on a line after # will be treated as a comment, and will be ignored when the code is run. Get into the habit of commenting your code: Don’t trust yourself to remember what it does!
+
+
+# Load R packages
+
+Much of the power of R comes from the thousands of “packages” written by its community of open source contributors. These are optimized for specific statistical, graphical or data-processing tasks. To see what packages are available in the basic distribution of R, select the Packages tab in the panel at bottom right. To find packages for particular tasks, try searching Google using appropriate keywords and the phrase “R package.”
+
+In this class, we will work with three incredibly useful packages developed by Hadley Wickham, chief scientist at RStudio:
+
+* readr For reading and writing CSV and other text files.
+* dplyr For processing and manipulating data.
+* ggplot2 Charting library, which builds graphics in layers according to a standard grammar.
+
+These and several other useful packages have been combined into a super-package called tidyverse.
+
+To install a package, click on the Install icon in the Packages tab, type its name into the dialog box, and make sure that Install dependencies is checked, as some packages will only run correctly if other packages are also installed. Click Install and all of the required packages should install.
+
+Each time you start R, it’s a good idea to click on Update in the Packages panel to update all your installed packages to the latest versions.
+
+Installing a package makes it available to you, but to use it in any R session you need to load it. You can do this by checking its box in the Packages tab. However, we will enter the following code into our script, then highlight these lines of code and run them:
 
 ...{r}
-> 1+1
-[1] 2
+# load required packages
+library(readr)
+library(dplyr)
+library(ggplot2)
 ...
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
