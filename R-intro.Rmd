@@ -268,7 +268,169 @@ There are also a number of join functions in dplyr to combine data from two data
 
  [Here is a useful reference](http://stat545.com/bit001_dplyr-cheatsheet.html) for managing joins with dplyr.
 
+ This code will join nations2 to nations1
+```{r}
+#join nations and nations2
+nations <- inner_join(nations1, nations2)
+```
+Those used to a lot of specificity when joining will be amazed at the guesswork involved here, as they were were read_csv() to get data from a text file, but here it works -- it picks the matching elemenats and joins them
+By default, dplyr looks for variables with matching names, here iso3c and year, and joins on those. But you can also specify exactly how a join should be made, like this:
+```{r}
+nations <- inner_join(nations1, nations2, by = c("iso3c" = "iso3c", "year" = "year"))
+```
+# Calculate total GDP by region and year
+
+In the joined data frame, we can now calculate the total GDP for each country and each year, in trillions of dollars, and then add up the totals by region over the years:
+```{r}
+# total GDP, in trillions of dollars, by region, over time
+gdp_regions <- nations %>%
+  mutate(gdp = gdp_percap * population,
+         gdp_tn = gdp/1000000000000) %>%
+  group_by(region, year) %>%
+  summarize(total_gdp_tn = sum(gdp_tn, na.rm = TRUE))
+  ```
+ Notice that variables created within a mutate function can be immediately used within the same function.
+
+Here the group_by() function groups on two variables, region and year.
+
+Notice that the sum function used to add up the GDP values across countries within each region and year includes the argument na.rm = TRUE, to remove the NA values before running the calculation.
+Exercise: see what happens if you don't inlclude that
+(Previously this wasn’t necessary because I had started by filtering out the NAs.)
+
+Get into the habit of including na.rm = TRUE in your summary functions, to avoid problems cuased by null values!
+
+# Now make some simple charts
+
+Introducing ggplot2 and the grammar of graphics
+
+The “gg” in ggplot2 stands for “grammar of graphics,” an approach to drawing charts devised by the statistician Leland Wilkinson. Rather than thinking in terms of finished charts like a scatter plot or a column chart, it starts by defining the coordinate system (usually the X and Y axes), maps data onto those coordinates, and then adds layers such as points, bars and so on. This is the logic behind ggplot2 code.
+
+ggplot2 code basics:
+
+* ggplot This is the master function that creates a ggplot2 chart.
+* aes This function, named for “aesthetic mapping,” is used whenever data values are mapped onto a chart. So it is used when you define which variables are plotted onto the X and Y axes, and also if you want to change the size or color of parts of the chart according to values for a variable.
+* geom All of the functions that add layers to a chart start with geom, followed by an underscore, for example geom_point() or geom_bar(). The code in the brackets for any geom layer styles the items in that layer, and can include aes mappings of values from data.
+* theme This function modifies the appearance of elements of a plot. It is used, for example, to set size and font face for text, the position of a legend, and so on.
+* scale Functions that begin with scale, followed by an underscore, are used to modify the way an aes mapping of data appears on a chart. They can change the axis range, for example, or specify a color palette to be used to encode values in the data.
+* + is used each time you add a layer, a scale, a theme, or elements like axis labels and a title After a + you can continue on the same line of code or move the next line. I usually write a new line after each +, which makes the code easier to follow.
+
+Draw a line chart showing total GDP, by region, over time.
+```{r}
+# Draw a line chart showing total GDP, by region, over time.
+ggplot(gdp_regions, aes(x=year, y=total_gdp_tn, color=region)) +
+  geom_line(size=1) +
+  xlab("") +
+  ylab("Total GDP ($ trillions)") +
+  theme_minimal(base_size = 12)
+```
+This simple code draws a chart from the gdp_regions data, putting year on the X axis, and total_gdp_tn on the Y. It codes the regions by color, and then adds a line for each region to the chart using geom_line(). xlab() and ylab control the axis labels, which would otherwise by the variable names, and theme_minimal replaces the default gray grid of a ggplot2 chart with a white background. base_size sets the default font size.
+
+Now Draw a bar chart showing the ten high-income countries with the lowest life expectancies in 2014.
+```{r}
+#Bar chart of 10 high income countries with lowest life expectancies
+ggplot(high_income_short_life, aes(x=reorder(country,-life_expect), y=life_expect)) +
+  geom_bar(stat="identity", fill = "red", alpha = 0.7) +
+  xlab("") +
+  ylab("Life expectancy at birth (2014)") + 
+  ggtitle("Rich countries with low life expectancies") +
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()) +
+  coord_flip()
+
+```
+Exercise: try this on your own, making a new R script and pasting the commands into this as 
+you go and running them. 
+
+# Load California kindergarten immunization data
  
+Now we’ll work with the California immunization data.
+```{r}
+# load data
+immun <- read_csv("kindergarten.csv",  col_types = list(
+  county = col_character(),
+  district = col_character(),
+  sch_code = col_character(),
+  pub_priv = col_character(),
+  school = col_character(),
+  enrollment = col_integer(),
+  complete  = col_integer(),
+  start_year = col_integer()))
+
+immun_2015 <- read_csv("kindergarten_2015.csv",  col_types = list(
+  county = col_character(),
+  district = col_character(),
+  sch_code = col_character(),
+  pub_priv = col_character(),
+  school = col_character(),
+  enrollment = col_integer(),
+  complete  = col_integer(),
+  start_year = col_integer()))
+  ```
+  
+We need to append the data for 2015 to the older data. So this code specifies the data type for each variable, to be sure that there won’t be any mismatches in data type that would cause an error in the next step.
+```{r}
+# Append the 2015 data to the older data
+# append the 2015 data to the older data
+immun <- bind_rows(immun, immun_2015)
+```
+
+
+This code introducesbind_rows(), which appends one data frame to another, based on matching column names and data types. (If a column exists in one data frame but not in the other, NAs will be added where necessary.)
+
+Calculate the percentage of children with incomplete immunizations, for the entire state, and by county
+
+The data contains the number of children enrolled in each kindergarten across the state, and the number who has the complete recommended immunizations at the start of the year.
+
+From this, we can calculate the percentage of children who did not have the complete achedule of immunizations. The following code runs these calculations for each year, first for the entire state, summing across all kindergartens grouped by year, and then for each of California’s 58 counties, by changing the group_by function.
+```{r}
+# percentage incomplete, entire state, by year
+immun_year <- immun %>%
+  group_by(start_year) %>%
+  summarize(enrolled = sum(enrollment, na.rm=TRUE),
+            completed = sum(complete, na.rm=TRUE)) %>%
+  mutate(pc_incomplete = round(((enrolled-completed)/enrolled*100),2))
+
+# percentage incomplete, by county, by year
+immun_counties_year <- immun %>%
+  group_by(county,start_year) %>%
+  summarize(enrolled = sum(enrollment, na.rm = TRUE),
+            completed = sum(complete, na.rm = TRUE)) %>%
+  mutate(pc_incomplete = round(((enrolled-completed)/enrolled*100),2))
+  ```
+  
+Notice how the round(x),n function is used to round values for x, here the percentage incomplete calculation, to n decimal places, here 2. Using negative numbers for n will round to tens, hundreds, and so on.
+
+Now we can identify the five largest counties with the largest enrollment over the years, and use a join to filter the data by counties for just these five:
+```{r}
+# identify five counties with the largest enrollment over all years
+top5 <- immun %>%
+  group_by(county) %>%
+  summarize(enrolled = sum(enrollment, na.rm = TRUE)) %>%
+  arrange(desc(enrolled)) %>%
+  head(5) %>%
+  select(county)
+
+# proportion incomplete, top 5 counties by enrollment, by year
+immun_top5_year <- semi_join(immun_counties_year, top5)
+```
+
+Notice the use of semi_join() to filter the data for just the five counties with the largest kindergarten enrollment.
+
+
+Make a series of charts to analyze this summarized data
+Column chart by year, entire state
+```{r}
+# column chart by year, entire state
+ggplot(immun_year, aes(x = start_year, y = pc_incomplete)) + 
+  geom_bar(stat = "identity", fill = "red", alpha = 0.7) +
+  xlab("") +
+  ylab("Percent incomplete") +
+  ggtitle("Immunization in California kindergartens, entire state") + 
+  theme_minimal(base_size = 12) +
+  theme(panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank())
+```
 
 
 
