@@ -65,6 +65,22 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 ```
+Load data
+
+You can load data into the current R session by selecting Import Dataset>From Text File... in the Environment tab.
+
+However, we will use the read_csv function from the readr package. Copy the following code into your script and Run:
+
+```{r}
+# load health and wealth of nations data
+nations1 <- read_csv("nations1.csv")
+nations2 <- read_csv("nations2.csv")
+```
+
+
+Notice that the Environment now contains two objects, of the type tbl_df, a variety of the standard R object for holding tables of data, known as a data frame:
+
+
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
 When the Associated Press recently added new data journalism items to its stylebook, it [specified](www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
