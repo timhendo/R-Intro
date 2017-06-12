@@ -65,7 +65,7 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 ```
-Load data
+# Load data
 
 You can load data into the current R session by selecting Import Dataset>From Text File... in the Environment tab.
 
@@ -80,7 +80,41 @@ nations2 <- read_csv("nations2.csv")
 
 Notice that the Environment now contains two objects, of the type tbl_df, a variety of the standard R object for holding tables of data, known as a data frame:
 
+The str function will tell you more about the columns in your data, including their data. 
+```{r}
+# view some of data
+head(nations1)
 
+```
+The head() function lets you see the first six rows of data and also the data type, which in this scenario is guessed by the read() function. Not bad -- it correctly guess that some columns are character (text) and some are numbers -- though it's made the population column "double" for decimal when it's really an integer (no decimals)
+
+Let's take a look at the population column specifically
+
+```{r}
+# print values for population in the nations1 data
+nations1$population
+```
+The output will be the first 10,000 values for that column.
+
+If you need to change the data type for any column, use the following functions:
+
+* as.character converts to a text string.
+* as.numeric converts to a number.
+* as.factor converts to a categorical variable.
+* as.integer converts to an integer
+* as.Date converts to a date
+* as.POSIXct converts to a full date and timestamp.
+
+So this code will convert the population numbers to integers:
+
+```{r}
+# convert population to integers
+nations1$population <- as.integer(nations1$population)
+```
+Now check again and note that population has changed to an integer type
+```{r}
+head(nations1)
+```
 
 R is a hot topic right now -- data journalists are increasingly learning it as a prime analysis tool, certainly for publishing analyses that can be easily replicated, and this is raising the bar for replicability everywhere.
 When the Associated Press recently added new data journalism items to its stylebook, it [specified](www.niemanlab.org/2017/05/the-ap-stylebook-now-includes-new-guidelines-on-data-requesting-it-scraping-it-reporting-on-it-and-publishing-it/) that " “If at all possible, an editor or another reporter should attempt to reproduce the results of the analysis and confirm all findings before publication.”
